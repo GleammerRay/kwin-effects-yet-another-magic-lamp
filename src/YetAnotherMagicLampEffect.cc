@@ -124,13 +124,22 @@ void YetAnotherMagicLampEffect::reconfigure(ReconfigureFlags flags)
 
 void YetAnotherMagicLampEffect::prePaintScreen(KWin::ScreenPrePaintData& data, std::chrono::milliseconds presentTime)
 {
-    for (AnimationData& data : m_animations) {
-        data.model.advance(presentTime);
-    }
-
     data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
 
     KWin::effects->prePaintScreen(data, presentTime);
+}
+
+void YetAnotherMagicLampEffect::prePaintWindow(KWin::EffectWindow* w, KWin::WindowPrePaintData& data, std::chrono::milliseconds presentTime)
+{
+    // Schedule window for transformation if the animation is still in
+    //  progress
+    auto animationIt = m_animations.find(w);
+    if (animationIt != m_animations.end()) {
+        (*animationIt).model.advance(presentTime);
+        data.setTransformed();
+    }
+
+    KWin::effects->prePaintWindow(w, data, presentTime);
 }
 
 void YetAnotherMagicLampEffect::postPaintScreen()
