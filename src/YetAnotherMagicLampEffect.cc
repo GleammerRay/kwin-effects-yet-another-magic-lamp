@@ -49,6 +49,8 @@ YetAnotherMagicLampEffect::YetAnotherMagicLampEffect()
         this, &YetAnotherMagicLampEffect::slotWindowDeleted);
     connect(KWin::effects, &KWin::EffectsHandler::activeFullScreenEffectChanged,
         this, &YetAnotherMagicLampEffect::slotActiveFullScreenEffectChanged);
+
+    setVertexSnappingMode(KWin::RenderGeometry::VertexSnappingMode::None);
 }
 
 YetAnotherMagicLampEffect::~YetAnotherMagicLampEffect()
